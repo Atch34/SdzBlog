@@ -10,13 +10,6 @@ sdzblog_voir:
     requirements:
         id:  \d+
 
-sdzblog_voir_slug:
-    pattern:   /{annee}/{slug}.{format}
-    defaults:  { _controller: SdzBlogBundle:Blog:voirSlug }
-    requirements:
-        annee:  \d{4}
-        format: html|xml
-
 sdzblog_ajouter:
     pattern:   /ajouter
     defaults:  { _controller: SdzBlogBundle:Blog:ajouter }

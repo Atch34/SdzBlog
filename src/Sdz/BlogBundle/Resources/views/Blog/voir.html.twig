@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Bienvenue sur ma première page avec le Site du Zéro !</title>
+    </head>
+    <body>
+        <h1>Lecture d'un article</h1>
+
+        <p>
+            {# On affiche tous les messages flash #}
+            
+            {% for key, flash in app.session.getFlashes() %}
+                {{ flash }}
+            {% endfor %}
+        </p>
+
+        <p>
+            Ici nous pourrons lire l'article ayant l'id contenu dans la route.<br />
+            Mais pour l'instant, nous ne savons pas encore le faire, cela viendra !
+        </p>
+    </body>
+</html>

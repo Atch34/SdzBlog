@@ -7,27 +7,64 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BlogController extends Controller
 {
-    public function indexAction()
+    public function indexAction($page)
     {
+        // On ne sait pas combien de pages il y a, mais on sait qu'une page
+        // doit être supérieure ou égale à 1.
+        if( $page < 1 )
+        {
+            // On déclenche une exception NotFoundHttpException, cela va afficher
+            // la page d'erreur 404 (on pourra personnaliser cette page plus tard, d'ailleurs).
+            throw $this->createNotFoundException('Page inexistante (page = '.$page.')');
+        }
+
+        // Ici, on récupérera la liste des articles, puis on la passera au template.
+
+        // Mais pour l'instant, on ne fait qu'appeler le template.
         return $this->render('SdzBlogBundle:Blog:index.html.twig');
     }
     
-    // La route fait appel à SdzBlogBundle:Blog:voir, on doit donc définir la méthode "voirAction".
-    // On donne à cette méthode l'argument $id, pour correspondre au paramètre {id} de la route.
+    
     public function voirAction($id)
     {
-        // $id vaut 5 si l'on a appelé l'URL /blog/article/5.
+        // Ici, on récupérera l'article correspondant à l'id $id.
         
-        // Ici, on récupèrera depuis la base de données l'article correspondant à l'id $id.
-        // Puis on passera l'article à la vue pour qu'elle puisse l'afficher.
-
-        return new Response("Affichage de l'article d'id : ".$id.".");
+        return $this->render('SdzBlogBundle:Blog:voir.html.twig');
     }
     
-    // Vous pouvez supprimer cette méthode et sa route sdzblog_voir_slug, elles ne resserviront plus dans la suite du tutoriel.
-    public function voirSlugAction($slug, $annee, $format)
+    public function ajouterAction()
     {
-        // Ici le contenu de la méthode.
-        return new Response("On pourrait afficher l'article correspondant au slug '".$slug."', créé en ".$annee." et au format ".$format.".");
+        // La gestion d'un formulaire est particulière, mais l'idée est la suivante :
+        
+        if( $this->get('request')->getMethod() == 'POST' )
+        {
+            // Ici, on s'occupera de la création et de la gestion du formulaire.
+            
+            $this->get('session')->setFlash('notice', 'Article bien enregistré');
+        
+            // Puis on redirige vers la page de visualisation de cet article.
+            return $this->redirect( $this->generateUrl('sdzblog_voir', array('id' => 5)) );
+        }
+        
+        // Si on n'est pas en POST, alors on affiche le formulaire.
+        return $this->render('SdzBlogBundle:Blog:ajouter.html.twig');
+    }
+    
+    public function modifierAction($id)
+    {
+        // Ici, on récupérera l'article correspondant à l'$id.
+
+        // Ici, on s'occupera de la création et de la gestion du formulaire.
+
+        return $this->render('SdzBlogBundle:Blog:modifier.html.twig');
+    }
+
+    public function supprimerAction($id)
+    {
+        // Ici, on récupérera l'article correspondant à l'$id.
+
+        // Ici, on gérera la suppression de l'article en question.
+
+        return $this->render('SdzBlogBundle:Blog:supprimer.html.twig');
     }
 }
