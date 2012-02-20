@@ -1,0 +1,26 @@
+{% extends "SdzBlogBundle::layout.html.twig" %}
+
+{% block title %}
+	Suppression d'un article - {{ parent() }}
+{% endblock %}
+
+{% block sdzblog_body %}
+
+	<h2>Suppression d'un article</h2>
+
+	<p>
+		Etes-vous sûr de vouloir supprimer l'article "{{ article.titre }}" ?
+	</p>
+
+	<form method="post">
+		<input type="submit" value="Oui" class="btn-danger" />
+	</form>
+
+	<p>
+		<a href="{{ path('sdzblog_voir', {'id': article.id}) }}" class="btn">
+			<i class="icon-chevron-left"></i>
+			Retour à l'article
+		</a>
+	</p>
+
+{% endblock %}

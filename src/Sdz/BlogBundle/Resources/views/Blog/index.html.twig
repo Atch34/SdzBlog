@@ -1,20 +1,23 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Bienvenue sur ma première page avec le Site du Zéro !</title>
-    </head>
-    <body>
-        <h1>Hello World !</h1>
+{% extends "SdzBlogBundle::layout.html.twig" %}
 
-        <p>
-            Le Hello World est un grand classique en programmation.
-            Il signifie énormément, car cela veut dire que vous avez
-            réussi à exécuter le programme pour accomplir une tâche simple :
-            afficher ce hello world !
-        </p>
-        
-        <p>
-        	Voici un test de lien depuis une vue Twig :
-        	<a href="{{ path('sdzblog_voir', {'id': 5}) }}">Voir l'article n°5</a>.
-    </body>
-</html>
+{% block title %}
+	Accueil - {{ parent() }}
+{% endblock %}
+
+{% block sdzblog_body %}
+
+	<h2>Liste des articles</h2>
+
+	<ul>
+		{% for article in articles %}
+			<li>
+				<a href="{{ path('sdzblog_voir', {'id': article.id}) }}">{{ article.titre }}</a>
+				par {{ article.auteur }},
+				le {{ article.date|date('d/m/Y') }}
+			</li>
+		{% else %}
+			<li>Pas (encore !) d'articles</li>
+		{% endfor %}
+	</ul>
+
+{% endblock %}

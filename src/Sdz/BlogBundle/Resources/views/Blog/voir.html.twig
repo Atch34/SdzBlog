@@ -1,22 +1,31 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Bienvenue sur ma première page avec le Site du Zéro !</title>
-    </head>
-    <body>
-        <h1>Lecture d'un article</h1>
+{% extends "SdzBlogBundle::layout.html.twig" %}
 
-        <p>
-            {# On affiche tous les messages flash #}
-            
-            {% for key, flash in app.session.getFlashes() %}
-                {{ flash }}
-            {% endfor %}
-        </p>
+{% block title %}
+	Lecture d'un article - {{ parent() }}
+{% endblock %}
 
-        <p>
-            Ici nous pourrons lire l'article ayant l'id contenu dans la route.<br />
-            Mais pour l'instant, nous ne savons pas encore le faire, cela viendra !
-        </p>
-    </body>
-</html>
+{% block sdzblog_body %}
+
+	<h2>{{ article.titre }}</h2>
+	<i>Par {{ article.auteur }}, le {{ article.date|date('d/m/Y') }}</i>
+
+	<div class="well">
+		{{ article.contenu }}
+	</div>
+
+	<p>
+		<a href="{{ path('sdzblog_accueil') }}" class="btn">
+			<i class="icon-chevron-left"></i>
+			Retour à la liste
+		</a>
+		<a href="{{ path('sdzblog_modifier', {'id': article.id}) }}" class="btn">
+			<i class="icon-edit"></i>
+			Modifier l'article
+		</a>
+		<a href="{{ path('sdzblog_supprimer', {'id': article.id}) }}" class="btn">
+			<i class="icon-trash"></i>
+			Supprimer l'article
+		</a>
+	</p>
+
+{% endblock %}
