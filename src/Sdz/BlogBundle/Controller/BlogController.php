@@ -11,24 +11,43 @@ class BlogController extends Controller
 {
     public function indexAction($page)
     {
-        // On ne sait pas combien de pages il y a, mais on sait qu'une page
-        // doit être supérieure ou égale à 1.
-        if( $page < 1 )
+        // On récupère le repository
+        $repository = $this->getDoctrine()
+                           ->getEntityManager()
+                           ->getRepository('SdzBlogBundle:Article');
+
+        // On récupère le nombre total d'articles
+        $nb_articles = $repository->getTotal();
+
+        // On définit le nombre d'articles par page
+        // (pour l'instant en dur dans le contrôleur, mais par la suite on le transformera en paramètre du bundle)
+        $nb_articles_page = 2;
+
+        // On calcul le nombre total de pages
+        $nb_pages = ceil($nb_articles/$nb_articles_page);
+
+        // On va récupérer les articles à partir du N-ième article :
+        $offset = ($page-1) * $nb_articles_page;
+
+        // Ici on a changé la condition pour déclencher une erreur 404
+        // lorsque la page est inférieur à 1 ou supérieur au nombre max.
+        if( $page < 1 OR $page > $nb_pages )
         {
-            // On déclenche une exception NotFoundHttpException, cela va afficher
-            // la page d'erreur 404 (on pourra personnaliser cette page plus tard, d'ailleurs).
             throw $this->createNotFoundException('Page inexistante (page = '.$page.')');
         }
 
-        // Pour récupérer la liste de tous les articles : on utilise findAll()
-        $articles = $this->getDoctrine()
-                         ->getEntityManager()
-                         ->getRepository('SdzBlogBundle:Article')
-                         ->findAll();
+        // On récupère les articles qu'il faut grâce à findBy() :
+        $articles = $repository->findBy(
+            array(),                 // Pas de critère
+            array('date' => 'desc'), // On tri par date décroissante
+            $nb_articles_page,       // On sélectionne $nb_articles_page articles
+            $offset                  // A partir du $offset ième
+        );
 
-        // L'appel de la vue ne change pas
         return $this->render('SdzBlogBundle:Blog:index.html.twig', array(
-            'articles' => $articles
+            'articles' => $articles,
+            'page'     => $page,    // On transmet à la vue la page courante,
+            'nb_pages' => $nb_pages // Et le nombre total de pages.
         ));
     }
 

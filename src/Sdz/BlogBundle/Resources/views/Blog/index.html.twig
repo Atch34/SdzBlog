@@ -20,4 +20,15 @@
 		{% endfor %}
 	</ul>
 
+    <div class="pagination">
+    	<ul>
+    		{# On utilise la fonction range(a, b) qui crée un tableau de valeurs entre a et b #}
+    		{% for p in range(1, nb_pages) %}
+    			<li{% if p == page %} class="active"{% endif %}>
+    				<a href="{{ path('sdzblog_accueil', {'page': p}) }}">{{ p }}</a>
+    			</li>
+    		{% endfor %}
+    	</ul>
+    </div>
+
 {% endblock %}
