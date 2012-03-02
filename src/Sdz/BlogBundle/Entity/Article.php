@@ -42,11 +42,28 @@ class Article
      */
     private $contenu;
 
+    /**
+     * @var string $auteur
+     *
+     * @ORM\Column(name="auteur", type="string", length=255)
+     */
+    private $auteur;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Sdz\BlogBundle\Entity\Tag")
+     */
+    private $tags;
+
+
+    public function __construct()
+    {
+        $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -66,7 +83,7 @@ class Article
     /**
      * Get date
      *
-     * @return datetime 
+     * @return datetime
      */
     public function getDate()
     {
@@ -86,7 +103,7 @@ class Article
     /**
      * Get titre
      *
-     * @return string 
+     * @return string
      */
     public function getTitre()
     {
@@ -106,10 +123,50 @@ class Article
     /**
      * Get contenu
      *
-     * @return text 
+     * @return text
      */
     public function getContenu()
     {
         return $this->contenu;
+    }
+
+    /**
+     * Set auteur
+     *
+     * @param string $auteur
+     */
+    public function setAuteur($auteur)
+    {
+        $this->auteur = $auteur;
+    }
+
+    /**
+     * Get auteur
+     *
+     * @return string
+     */
+    public function getAuteur()
+    {
+        return $this->auteur;
+    }
+
+    /**
+     * Add tags
+     *
+     * @param Sdz\BlogBundle\Entity\Tag $tags
+     */
+    public function addTag(\Sdz\BlogBundle\Entity\Tag $tags)
+    {
+        $this->tags[] = $tags;
+    }
+
+    /**
+     * Get tags
+     *
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getTags()
+    {
+        return $this->tags;
     }
 }
