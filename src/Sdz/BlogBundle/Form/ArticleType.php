@@ -13,6 +13,7 @@ class ArticleType extends AbstractType
             ->add('date')
             ->add('titre')
             ->add('contenu')
+			->add('auteur')
         ;
     }
 

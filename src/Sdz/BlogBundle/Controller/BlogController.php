@@ -18,16 +18,13 @@ class BlogController extends Controller
             throw $this->createNotFoundException('Page inexistante (page = '.$page.')');
         }
 
-        // Ici, on récupérera la liste des articles, puis on la passera au template.
+        // Pour récupérer la liste de tous les articles : on utilise findAll()
+        $articles = $this->getDoctrine()
+                         ->getEntityManager()
+                         ->getRepository('SdzBlogBundle:Article')
+                         ->findAll();
 
-        // Les articles :
-        $articles = array(
-            array('titre' => 'Mon weekend a Phi Phi Island !',          'id' => 1, 'auteur' => 'winzou',  'contenu' => 'Ce weekend était trop bien. Blabla...',  'date' => new \Datetime()),
-            array('titre' => 'Repetition du National Day de Singapour', 'id' => 2, 'auteur' => 'winzou',  'contenu' => 'Bientôt prêt pour le jour J. Blabla...', 'date' => new \Datetime()),
-            array('titre' => 'Chiffre d\'affaire en hausse',            'id' => 3, 'auteur' => 'M@teo21', 'contenu' => '+500% sur 1 an, fabuleux. Blabla...',    'date' => new \Datetime())
-        );
-
-        // Puis modifiez la ligne du render comme ceci, pour prendre en compte nos articles :
+        // L'appel de la vue ne change pas
         return $this->render('SdzBlogBundle:Blog:index.html.twig', array(
             'articles' => $articles
         ));
@@ -36,16 +33,17 @@ class BlogController extends Controller
 
     public function voirAction($id)
     {
-        // Ici, on récupérera l'article correspondant à l'id $id.
+        // Pour récupérer un article unique : on utilise find()
+        $article = $this->getDoctrine()
+                        ->getEntityManager()
+                        ->getRepository('SdzBlogBundle:Article')
+                        ->find($id);
 
-        // Article pour l'exemple, on le supprimera lorsqu'on saura le récupérer depuis la base de données.
-        $article = array(
-        	'id'      => 1,
-        	'titre'   => 'Mon weekend a Phi Phi Island !',
-        	'auteur'  => 'winzou',
-            'contenu' => 'Ce weekend était trop bien. Blabla...',
-        	'date'    => new \Datetime()
-        );
+        // Si l'article n'existe pas, on affiche une erreur 404
+        if( $article == null )
+        {
+            throw $this->createNotFoundException('Article[id='.$id.'] inexistant');
+        }
 
         return $this->render('SdzBlogBundle:Blog:voir.html.twig', array(
             'article' => $article
@@ -72,18 +70,18 @@ class BlogController extends Controller
 
     public function modifierAction($id)
     {
-        // Ici, on récupérera l'article correspondant à l'$id.
+        $article = $this->getDoctrine()
+                        ->getEntityManager()
+                        ->getRepository('SdzBlogBundle:Article')
+                        ->find($id);
+
+        // Si l'article n'existe pas, on affiche une erreur 404
+        if( $article == null )
+        {
+            throw $this->createNotFoundException('Article[id='.$id.'] inexistant');
+        }
 
         // Ici, on s'occupera de la création et de la gestion du formulaire.
-
-        // Article pour l'exemple, on le supprimera lorsqu'on saura le récupérer depuis la base de données.
-        $article = array(
-        	'id'      => 1,
-        	'titre'   => 'Mon weekend a Phi Phi Island !',
-        	'auteur'  => 'winzou',
-            'contenu' => 'Ce weekend était trop bien. Blabla...',
-        	'date'    => new \Datetime()
-        );
 
         return $this->render('SdzBlogBundle:Blog:modifier.html.twig', array(
             'article' => $article
@@ -92,20 +90,16 @@ class BlogController extends Controller
 
     public function supprimerAction($id)
     {
-        // Ici, on récupérera l'article correspondant à l'$id.
+        $article = $this->getDoctrine()
+                        ->getEntityManager()
+                        ->getRepository('SdzBlogBundle:Article')
+                        ->find($id);
 
-        // Ici, on gérera la suppression de l'article en question.
-
-        // Article pour l'exemple, on le supprimera lorsqu'on saura le récupérer depuis la base de données.
-        $article = array(
-        	'id'      => 1,
-        	'titre'   => 'Mon weekend a Phi Phi Island !',
-        	'auteur'  => 'winzou',
-            'contenu' => 'Ce weekend était trop bien. Blabla...',
-        	'date'    => new \Datetime()
-        );
-
-        // Ici, on récupérera l'article correspondant à l'$id.
+        // Si l'article n'existe pas, on affiche une erreur 404
+        if( $article == null )
+        {
+            throw $this->createNotFoundException('Article[id='.$id.'] inexistant');
+        }
 
         if( $this->get('request')->getMethod() == 'POST' )
         {
