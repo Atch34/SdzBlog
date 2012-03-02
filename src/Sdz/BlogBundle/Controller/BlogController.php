@@ -5,6 +5,8 @@ namespace Sdz\BlogBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
+use Sdz\BlogBundle\Entity\Article;
+
 class BlogController extends Controller
 {
     public function indexAction($page)
@@ -31,20 +33,8 @@ class BlogController extends Controller
     }
 
 
-    public function voirAction($id)
+    public function voirAction(Article $article)
     {
-        // Pour récupérer un article unique : on utilise find()
-        $article = $this->getDoctrine()
-                        ->getEntityManager()
-                        ->getRepository('SdzBlogBundle:Article')
-                        ->find($id);
-
-        // Si l'article n'existe pas, on affiche une erreur 404
-        if( $article == null )
-        {
-            throw $this->createNotFoundException('Article[id='.$id.'] inexistant');
-        }
-
         return $this->render('SdzBlogBundle:Blog:voir.html.twig', array(
             'article' => $article
         ));
@@ -68,19 +58,8 @@ class BlogController extends Controller
         return $this->render('SdzBlogBundle:Blog:ajouter.html.twig');
     }
 
-    public function modifierAction($id)
+    public function modifierAction(Article $article)
     {
-        $article = $this->getDoctrine()
-                        ->getEntityManager()
-                        ->getRepository('SdzBlogBundle:Article')
-                        ->find($id);
-
-        // Si l'article n'existe pas, on affiche une erreur 404
-        if( $article == null )
-        {
-            throw $this->createNotFoundException('Article[id='.$id.'] inexistant');
-        }
-
         // Ici, on s'occupera de la création et de la gestion du formulaire.
 
         return $this->render('SdzBlogBundle:Blog:modifier.html.twig', array(
@@ -88,19 +67,8 @@ class BlogController extends Controller
         ));
     }
 
-    public function supprimerAction($id)
+    public function supprimerAction(Article $article)
     {
-        $article = $this->getDoctrine()
-                        ->getEntityManager()
-                        ->getRepository('SdzBlogBundle:Article')
-                        ->find($id);
-
-        // Si l'article n'existe pas, on affiche une erreur 404
-        if( $article == null )
-        {
-            throw $this->createNotFoundException('Article[id='.$id.'] inexistant');
-        }
-
         if( $this->get('request')->getMethod() == 'POST' )
         {
             // Si la requête est en POST, on supprimera l'article.
